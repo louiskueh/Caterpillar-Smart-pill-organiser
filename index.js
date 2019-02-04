@@ -10,7 +10,8 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
   socket.on('new message', function(msg){
     console.log('msg recieved: ' + msg);
-    io.emit('new message', msg);
+    let message = {"message":msg}
+    io.emit('new message', message);
   });
 });
 io.on('connection', function(socket){
