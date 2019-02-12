@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var csvWriter = require('csv-write-stream')
 
+
 class csvManager {
     constructor(type) {
         this.Path = path.basename(__dirname) + '/../resources/' + type + '.csv';
@@ -16,10 +17,18 @@ class csvManager {
 
         console.log("created csv writer for " + type + " successfuly!")
     }
+    
     write(data) {
-        this.writer.pipe(fs.createWriteStream(this.Path, { flags: 'a' }));
-        this.writer.write(data);
-        this.writer.end();
+            var fileStream = fs.createWriteStream(this.Path, { flags: 'a' })
+            fileStream.on('error', function(err) {
+                console.log("Exception occured! Most likely xml file is in use")
+                console.log(err);
+                fileStream.end();
+            });
+
+            this.writer.pipe(fileStream);
+            this.writer.write(data);
+            this.writer.end();
     }
 
     setHeader(type) {
@@ -56,9 +65,9 @@ class csvManager {
 
 }
 
-// csvmanage = new csvManager("timeTaken")
-// const records = { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
-// csvmanage.write(records)
+csvmanage = new csvManager("timeTaken")
+const records = { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
+csvmanage.write(records)
 
 // csvmanage = new csvManager("questions")
 // const records1 = { Timestamp: '11:00:00', Day: '2', BoxNo: '1' }

@@ -1,7 +1,7 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-const csvManager = require('./csvManager.js');
+csvManager = require('./csvManager.js');
 var port = 65080;
 
 app.get('/', function(req, res){
@@ -15,13 +15,33 @@ io.on('connection', function(socket){
     io.emit('new message', message);
   });
 });
+
+
 io.on('connection', function(socket){
   console.log('a user connected');
   socket.on('disconnect', function(){
     console.log('user disconnected');
   });
+  
 });
+
+// receiving data from phone/pi
+io.on('connection', function(socket){
+  console.log('Incoming data');
+  socket.on('data', function(data){
+    //store data
+    // timeTaken, questions, watchInfo
+    csvManager = new csvManager(data.type)
+    //format { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
+    csvManager.write(data.data)
+  });
+});
+
+
+
 
 http.listen(port, function(){
   console.log('listening on *:' + port);
 });
+
+
