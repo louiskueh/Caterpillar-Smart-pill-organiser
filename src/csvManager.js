@@ -9,7 +9,7 @@ class csvManager {
 
         if (!fs.existsSync(this.Path)) {
             var header = this.setHeader(type)
-            if (header == 0) { throw "incorrect type!" };
+            if (header == 0) { throw new Error("incorrect type!") };
             this.writer = csvWriter({ headers: header });
         }
         else
@@ -65,9 +65,9 @@ class csvManager {
 
 }
 
-csvmanage = new csvManager("timeTaken")
-const records = { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
-csvmanage.write(records)
+// csvmanage = new csvManager("timeTaken")
+// const records = { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
+// csvmanage.write(records)
 
 // csvmanage = new csvManager("questions")
 // const records1 = { Timestamp: '11:00:00', Day: '2', BoxNo: '1' }
