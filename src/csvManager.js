@@ -60,12 +60,13 @@ class csvManager {
 // const records = { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
 // csvmanage.write(records)
 
-csvmanage = new csvManager("questions")
-const records1 = { Timestamp: '11:00:00', Day: '2', BoxNo: '1' }
-csvmanage.write(records1)
+// csvmanage = new csvManager("questions")
+// const records1 = { Timestamp: '11:00:00', Day: '2', BoxNo: '1' }
+// csvmanage.write(records1)
 
-csvmanage = new csvManager("watchInfo")
-const records2 = { accelX: '1',accelY: '1', accelZ :'1',heartRate: '2' }
-csvmanage.write(records2)
+// csvmanage = new csvManager("watchInfo")
+// const records2 = { accelX: '1',accelY: '1', accelZ :'1',heartRate: '2' }
+// csvmanage.write(records2)
 
 
+module.exports = csvManager;
