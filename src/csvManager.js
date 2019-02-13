@@ -74,9 +74,9 @@ class csvManager {
 
 }
 
-csvmanage = new csvManager("userDetails")
-const records = { Username: 'user', Password: 'pass'}
-csvmanage.write(records)
+// csvmanage = new csvManager("userDetails")
+// const records = { Username: 'user', Password: 'pass'}
+// csvmanage.write(records)
 
 // csvmanage = new csvManager("timeTaken")
 // const records0 = { Username: 'user',Timestamp: '11:00:00', Day: '2', BoxNo: '1' }
