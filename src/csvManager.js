@@ -34,8 +34,15 @@ class csvManager {
     setHeader(type) {
         var header = []
         switch (type) {
+            case 'userDetails':
+            header = [
+                'Username',
+                'Password'
+            ]
+            break;
             case 'timeTaken':
                 header = [
+                    'Username',
                     'Timestamp',
                     'Day',
                     'BoxNo'
@@ -43,12 +50,14 @@ class csvManager {
                 break;
             case 'questions':
                 header = [
+                    'Username',
                     'Timestamp',
                     'QuestionNo'
                 ]
                 break;
             case 'watchInfo':
                 header = [
+                    'Username',
                     'accelX',
                     'accelY',
                     'accelZ',
@@ -65,16 +74,21 @@ class csvManager {
 
 }
 
+csvmanage = new csvManager("userDetails")
+const records = { Username: 'user', Password: 'pass'}
+csvmanage.write(records)
+
 // csvmanage = new csvManager("timeTaken")
-// const records = { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
-// csvmanage.write(records)
+// const records0 = { Username: 'user',Timestamp: '11:00:00', Day: '2', BoxNo: '1' }
+// csvmanage.write(records0)
+
 
 // csvmanage = new csvManager("questions")
-// const records1 = { Timestamp: '11:00:00', Day: '2', BoxNo: '1' }
+// const records1 = { Username: 'user',Timestamp: '11:00:00', Day: '2', QuestionNo: '1' }
 // csvmanage.write(records1)
 
 // csvmanage = new csvManager("watchInfo")
-// const records2 = { accelX: '1',accelY: '1', accelZ :'1',heartRate: '2' }
+// const records2 = { Username: 'user',accelX: '1',accelY: '1', accelZ :'1',heartRate: '2' }
 // csvmanage.write(records2)
 
 
