@@ -13,7 +13,7 @@ io.on('connection', function (socket) {
     let message = { "message": msg }
     io.emit('new message', message);
   });
-  
+
 });
 
 
@@ -49,7 +49,16 @@ io.on('connection', function (socket) {
       // timeTaken, questions, watchInfo
       csvManager = require('./csvManager.js');
       csvManager = new csvManager(data.type)
-      csvManager.write(data.data)
+      // var checkLogin = 
+      // console.log(checkLogin)
+      
+      csvManager.readCheckLogin(data.data).then(success => {
+        console.log("Sending over socket IO login Auth : " + success)
+        let objectWrapper = { "Success": success }
+        io.emit('LoginAuth', objectWrapper);
+      })
+
+
 
     } catch (error) {
       console.log(error)

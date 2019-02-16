@@ -19,15 +19,23 @@ class csvManager {
 
         console.log("created csv Manager " + type + " successfuly!")
     }
+
+
     checkLogin(Username, Password, data) {
-        var result = data.map(item => (item.Username == Username && item.Password == Password) ? true : false)
-        console.log(result)
-        if (result.includes(true)) return true
-        else return false;
+        for (var  i = 0 ; i < data.length ; i ++ ) {
+            if (Username == data[i].Username && Password == data[i].Password ) return "Success"
+        }
+        return "Fail"
+        // var result = data.map(item => (item.Username == Username && item.Password == Password) ? true : false)
+        // console.log(result)
+        // if (result.includes(true)) return true
+        // else return false;
     }
 
     async readCheckLogin(data) {
-        console.log("Reading data from " + 'resources/' + this.type + '.csv')
+        console.log("Recieved login data: "  + data.Username + ' |Password ' + data.Password)
+        // console.log("Reading data from " + 'resources/' + this.type + '.csv')
+
         csv()
             .fromFile(this.Path)
             .then((jsonObj) => {
@@ -36,8 +44,9 @@ class csvManager {
 
         // Async / await usage
         const jsonArray = await csv().fromFile(this.Path);
-        console.log(jsonArray)
-        console.log(this.checkLogin("user","pass",jsonArray))
+        // console.log(jsonArray)
+        // console.log(this.checkLogin("user","pass",jsonArray))
+        return this.checkLogin(data.Username,data.Password,jsonArray)
     }
 
 
@@ -97,10 +106,10 @@ class csvManager {
 
 }
 
-csvmanage = new csvManager("userDetails")
-const records = { Username: 'user', Password: 'pass' }
-// csvmanage.write(records)
-console.log(csvmanage.readCheckLogin(records))
+// csvmanage = new csvManager("userDetails")
+// const records = { Username: 'user', Password: 'pass' }
+// // csvmanage.write(records)
+// console.log(csvmanage.readCheckLogin(records))
 
 // csvmanage = new csvManager("timeTaken")
 // const records0 = { Username: 'user',Timestamp: '11:00:00', Day: '2', BoxNo: '1' }
