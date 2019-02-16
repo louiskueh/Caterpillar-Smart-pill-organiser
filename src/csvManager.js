@@ -69,7 +69,8 @@ class csvManager {
             case 'userDetails':
                 header = [
                     'Username',
-                    'Password'
+                    'Password',
+                    'Name'
                 ]
                 break;
             case 'timeTaken':

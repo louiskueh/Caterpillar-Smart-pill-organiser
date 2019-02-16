@@ -66,7 +66,7 @@ io.on('connection', function (socket) {
   });
 });
 
-
+// TODO: Receive stuff from raspberry PI and send to phone
 
 
 http.listen(port, function () {
