@@ -24,7 +24,7 @@ io.on('connection', function (socket) {
   });
 });
 
-// receiving data from phone/pi
+// receiving data to save from phone/pi
 io.on('connection', function (socket) {
   socket.on('data', function (data) {
     console.log('Incoming data');
@@ -38,8 +38,22 @@ io.on('connection', function (socket) {
     } catch (error) {
       console.log(error)
     }
+  });
+});
 
+// Authenticate login
+io.on('connection', function (socket) {
+  socket.on('login', function (data) {
+    console.log('Incoming data');
+    try {
+      // timeTaken, questions, watchInfo
+      csvManager = require('./csvManager.js');
+      csvManager = new csvManager(data.type)
+      csvManager.write(data.data)
 
+    } catch (error) {
+      console.log(error)
+    }
   });
 });
 
