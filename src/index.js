@@ -16,7 +16,6 @@ io.on('connection', function (socket) {
 
 });
 
-
 io.on('connection', function (socket) {
   console.log('a user connected');
   socket.on('disconnect', function () {
@@ -52,14 +51,14 @@ io.on('connection', function (socket) {
       // var checkLogin = 
       // console.log(checkLogin)
       
-      csvManager.readCheckLogin(data.data).then(success => {
-        console.log("Sending over socket IO login Auth : " + success)
-        let objectWrapper = { "Success": success }
+      csvManager.readCheckLogin(data.data).then(object => {
+        success = object.state
+        name = object.name
+        console.log("Name: " + name)
+        let objectWrapper = { "Success": success, "Name" :name }
+        console.log("Sending over socket IO login Auth : " + objectWrapper.Success + " name:" + objectWrapper.Name)
         io.emit('LoginAuth', objectWrapper);
       })
-
-
-
     } catch (error) {
       console.log(error)
     }

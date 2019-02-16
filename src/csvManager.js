@@ -23,9 +23,11 @@ class csvManager {
 
     checkLogin(Username, Password, data) {
         for (var  i = 0 ; i < data.length ; i ++ ) {
-            if (Username == data[i].Username && Password == data[i].Password ) return "Success"
+            if (Username == data[i].Username && Password == data[i].Password ){
+                   return {state:"Success" , name:data[i].Name}
+            } 
         }
-        return "Fail"
+        return {state:"Fail" , name:""}
         // var result = data.map(item => (item.Username == Username && item.Password == Password) ? true : false)
         // console.log(result)
         // if (result.includes(true)) return true
@@ -33,7 +35,7 @@ class csvManager {
     }
 
     async readCheckLogin(data) {
-        console.log("Recieved login data: "  + data.Username + ' |Password ' + data.Password)
+        console.log("Recieved login data: "  + data.Username + ' | Password ' + data.Password + " |Name: ")
         // console.log("Reading data from " + 'resources/' + this.type + '.csv')
 
         csv()
