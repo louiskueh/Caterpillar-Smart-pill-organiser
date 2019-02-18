@@ -85,9 +85,12 @@ class csvManager {
                 break;
             case 'questions':
                 header = [
-                    'Username',
-                    'Timestamp',
-                    'QuestionNo'
+                    'Name',
+                    'Wake',
+                    'Breakfast',
+                    'Lunch',
+                    'Dinner',
+                    'Sleep'
                 ]
                 break;
             case 'watchInfo':
