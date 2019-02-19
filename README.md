@@ -5,7 +5,10 @@ Chat example hosted on gcloud server
 
 # Test object
 
-
+* display csv command line 
+````
+column -s, -t < resources/questions.csv | less -#2 -N -S
+```
 ```js
 {
   type: "userDetails",
