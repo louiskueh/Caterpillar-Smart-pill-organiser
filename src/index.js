@@ -102,9 +102,9 @@ io.on('connection', function (socket) {
   socket.on('pill', function (msg) {
     console.log ( 'pill' + msg)
   });
+  // socket.emit("pill_slot", "1")
 
 });
-
 
 http.listen(port, function () {
   console.log('listening on *:' + port);
