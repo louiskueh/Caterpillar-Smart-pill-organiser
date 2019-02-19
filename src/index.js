@@ -74,7 +74,7 @@ io.on('connection', function (socket) {
       // timeTaken, questions, watchInfo
       csvManager = require('./csvManager.js');
       csvManager = new csvManager("addMedication")
-      csvManager.readMedicationData(data.Name).then(data => {
+      csvManager.readMedicationData(data).then(data => {
         var filtered = csvManager.filterDataFromName(data)
         console.log(filtered)
         io.emit('medicationDetails', filtered);
