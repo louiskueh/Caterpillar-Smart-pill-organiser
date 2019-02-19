@@ -24,10 +24,10 @@ class csvManager {
     checkLogin(Username, Password, data) {
         for (var i = 0; i < data.length; i++) {
             if (Username == data[i].Username && Password == data[i].Password) {
-                return { state: "Success", name: data[i].Name }
+                return { state: "Success", name: data[i].Name , caregiver:data[i].Caregiver}
             }
         }
-        return { state: "Fail", name: "" }
+        return { state: "Fail", name: "", caregiver:"" }
         // var result = data.map(item => (item.Username == Username && item.Password == Password) ? true : false)
         // console.log(result)
         // if (result.includes(true)) return true
@@ -113,7 +113,8 @@ class csvManager {
                 header = [
                     'Username',
                     'Password',
-                    'Name'
+                    'Name',
+                    'Caregiver'
                 ]
                 break;
             case 'timeTaken':

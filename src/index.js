@@ -32,6 +32,7 @@ io.on('connection', function (socket) {
       csvManager = require('./csvManager.js');
       csvManager = new csvManager(data.type)
       //format { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
+      console.log("recieved data")
       csvManager.write(data.data)
 
     } catch (error) {
@@ -54,9 +55,11 @@ io.on('connection', function (socket) {
       csvManager.readCheckLogin(data.data).then(object => {
         success = object.state
         name = object.name
+        caregiver = object.caregiver
         console.log("Name: " + name)
-        let objectWrapper = { "Success": success, "Name" :name }
-        console.log("Sending over socket IO login Auth : " + objectWrapper.Success + " name:" + objectWrapper.Name)
+        let objectWrapper = { "Success": success, "Name" :name, "Caregiver" : caregiver  }
+        console.log("Sending over socket IO login Auth : " + objectWrapper.Success + " name:" + objectWrapper.Name +" caregiver:" 
+        + objectWrapper.Caregiver)
         io.emit('LoginAuth', objectWrapper);
       })
     } catch (error) {

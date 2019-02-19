@@ -1,5 +1,2 @@
 User,Name,Instruction,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Morning,Afternoon,Night,Meal
-kavin,medmed,insins,false,false,false,false,false,false,false,false,false,false,Before
-kavin,2,2ins,false,false,false,false,false,false,false,false,false,false,Before
-kavin,33333,33333,false,false,false,false,false,false,false,false,false,false,Before
-whatever,med1,inst1,false,false,false,false,false,false,false,false,false,false,Before
+kavin,555,5,true,false,false,false,false,true,true,true,false,true,Before
