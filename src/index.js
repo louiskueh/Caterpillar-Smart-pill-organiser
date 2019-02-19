@@ -12,6 +12,7 @@ io.on('connection', function (socket) {
     console.log('msg recieved: ' + msg);
     let message = { "message": msg }
     io.emit('new message', message);
+    socket.emit("pill_slot", "1")
   });
 
 });
@@ -105,7 +106,7 @@ io.on('connection', function (socket) {
   socket.on('pill', function (msg) {
     console.log ( 'pill' + msg)
   });
-  // socket.emit("pill_slot", "1")
+
 
 });
 
