@@ -1,2 +1,4 @@
 Name,Instruction,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Morning,Afternoon,Night,Meal
 medicationName,Instruction,false,true,false,false,true,true,false,true,true,false,true
+medicationName,Instruction,false,true,false,false,true,true,false,true,true,false,true
+medicationName2,Instruction,false,true,false,false,true,true,false,true,true,false,true

@@ -22,33 +22,56 @@ class csvManager {
 
 
     checkLogin(Username, Password, data) {
-        for (var  i = 0 ; i < data.length ; i ++ ) {
-            if (Username == data[i].Username && Password == data[i].Password ){
-                   return {state:"Success" , name:data[i].Name}
-            } 
+        for (var i = 0; i < data.length; i++) {
+            if (Username == data[i].Username && Password == data[i].Password) {
+                return { state: "Success", name: data[i].Name }
+            }
         }
-        return {state:"Fail" , name:""}
+        return { state: "Fail", name: "" }
         // var result = data.map(item => (item.Username == Username && item.Password == Password) ? true : false)
         // console.log(result)
         // if (result.includes(true)) return true
         // else return false;
     }
+    filterDataFromName(data, name) {
+        var list = []
+        for (var i = 0; i < data.length; i++) {
+            if (name ==data[i].Name) {
+                list.push(data[i])
+                // return { state: "Success", name: data[i].Name }
+            }
+        }
+        return list
+    }
 
     async readCheckLogin(data) {
-        console.log("Recieved login data: "  + data.Username + ' | Password ' + data.Password + " |Name: ")
+        console.log("Recieved login data: " + data.Username + ' | Password ' + data.Password + " |Name: ")
         // console.log("Reading data from " + 'resources/' + this.type + '.csv')
 
         csv()
             .fromFile(this.Path)
-            .then((jsonObj) => {
-
-            })
-
+            .then((jsonObj) => {})
         // Async / await usage
         const jsonArray = await csv().fromFile(this.Path);
         // console.log(jsonArray)
         // console.log(this.checkLogin("user","pass",jsonArray))
-        return this.checkLogin(data.Username,data.Password,jsonArray)
+        return this.checkLogin(data.Username, data.Password, jsonArray)
+    }
+    async readMedicationData(data) {
+        console.log("Reading medication data for user " + data)
+        csv()
+            .fromFile(this.Path)
+            .then((jsonObj) => {
+            })
+
+        // Async / await usage
+        const jsonArray = await csv().fromFile(this.Path);
+        // console.log("Medication data" + JSON.stringify(jsonArray))
+        // console.log(jsonArray)
+        // console.log(this.checkLogin("user","pass",jsonArray))
+        // return this.filterDataFromName(data.Name, jsonArray)
+        return jsonArray
+
     }
 
 
@@ -69,22 +92,22 @@ class csvManager {
         var header = []
         switch (type) {
             case 'addMedication':
-            header = [
-                'Name',
-                'Instruction',
-                'Mon',
-                'Tue',
-                'Wed',
-                'Thu',
-                'Fri',
-                'Sat',
-                'Sun',
-                'Morning',
-                'Afternoon',
-                'Night',
-                'Meal'
-            ]
-            break;         
+                header = [
+                    'Name',
+                    'Instruction',
+                    'Mon',
+                    'Tue',
+                    'Wed',
+                    'Thu',
+                    'Fri',
+                    'Sat',
+                    'Sun',
+                    'Morning',
+                    'Afternoon',
+                    'Night',
+                    'Meal'
+                ]
+                break;
             case 'userDetails':
                 header = [
                     'Username',
@@ -128,8 +151,22 @@ class csvManager {
 
 
 }
-// csvManager = new csvManager('addMedication')
-// const records = { Name: 'medicationName',Instruction: 'Instruction', Mon: false, Tue: true, Wed: false, 
+csvManager = new csvManager('addMedication')
+try {
+   csvManager.readMedicationData("user").then(jsonArray => {
+    var list = csvManager.filterDataFromName(jsonArray,"medicationName")
+    console.log (list)
+   }) .catch((error) => {
+    console.log(error)
+  });
+}catch (error) {
+    console.log(error)
+}
+
+
+// const test = {"Name" : "John" , "ID" : 1, }
+
+// const records = { Name: 'medicationName2',Instruction: 'Instruction', Mon: false, Tue: true, Wed: false, 
 // Thu: false, Fri: true, Sat:true, Sun: false, Morning :true, Afternoon : true, Night:false, Meal: true }
 // csvManager.write(records)
 // csvmanage = new csvManager("userDetails")
