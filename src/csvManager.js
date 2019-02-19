@@ -151,17 +151,17 @@ class csvManager {
 
 
 }
-csvManager = new csvManager('addMedication')
-try {
-   csvManager.readMedicationData("user").then(jsonArray => {
-    var list = csvManager.filterDataFromName(jsonArray,"medicationName")
-    console.log (list)
-   }) .catch((error) => {
-    console.log(error)
-  });
-}catch (error) {
-    console.log(error)
-}
+// csvManager = new csvManager('addMedication')
+// try {
+//    csvManager.readMedicationData("user").then(jsonArray => {
+//     var list = csvManager.filterDataFromName(jsonArray,"medicationName")
+//     console.log (list)
+//    }) .catch((error) => {
+//     console.log(error)
+//   });
+// }catch (error) {
+//     console.log(error)
+// }
 
 
 // const test = {"Name" : "John" , "ID" : 1, }
