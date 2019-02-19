@@ -36,7 +36,7 @@ class csvManager {
     filterDataFromName(data, name) {
         var list = []
         for (var i = 0; i < data.length; i++) {
-            if (name ==data[i].Name) {
+            if (name ==data[i].User) {
                 list.push(data[i])
                 // return { state: "Success", name: data[i].Name }
             }
@@ -93,6 +93,7 @@ class csvManager {
         switch (type) {
             case 'addMedication':
                 header = [
+                    'User',
                     'Name',
                     'Instruction',
                     'Mon',

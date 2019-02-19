@@ -68,16 +68,16 @@ io.on('connection', function (socket) {
 
 // Send medication details back
 io.on('connection', function (socket) {
-  socket.on('requireMedication', function (data) {
-    console.log('Incoming medication for user ' + data );
+  socket.on('queryMed', function (name) {
+    console.log('Incoming medication for user ' + name );
     try {
       // timeTaken, questions, watchInfo
       csvManager = require('./csvManager.js');
       csvManager = new csvManager("addMedication")
-      csvManager.readMedicationData(data).then(data => {
-        var filtered = csvManager.filterDataFromName(data)
+      csvManager.readMedicationData(name).then(data => {
+        var filtered = csvManager.filterDataFromName(data,name)
         console.log(filtered)
-        io.emit('medicationDetails', filtered);
+        io.emit('responseMed', filtered);
       }).catch((error) => {
         console.log(error)
       });
@@ -89,6 +89,21 @@ io.on('connection', function (socket) {
 
 
 // TODO: Receive stuff from raspberry PI and send to phone
+// send to you
+// 'pill_slot'
+
+// 'slot_opened' : true / false 
+// 'pill'  : present/ taken
+// Send medication details back
+io.on('connection', function (socket) {
+  socket.on('slot_opened', function (msg) {
+    console.log ( 'slot_opened' + msg)
+  });
+  socket.on('pill', function (msg) {
+    console.log ( 'pill' + msg)
+  });
+
+});
 
 
 http.listen(port, function () {

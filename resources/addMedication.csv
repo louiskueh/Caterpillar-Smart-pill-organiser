@@ -1,4 +1,5 @@
-Name,Instruction,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Morning,Afternoon,Night,Meal
-medicationName,Instruction,false,true,false,false,true,true,false,true,true,false,true
-medicationName,Instruction,false,true,false,false,true,true,false,true,true,false,true
-medicationName2,Instruction,false,true,false,false,true,true,false,true,true,false,true
+User,Name,Instruction,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Morning,Afternoon,Night,Meal
+kavin,medmed,insins,false,false,false,false,false,false,false,false,false,false,Before
+kavin,2,2ins,false,false,false,false,false,false,false,false,false,false,Before
+kavin,33333,33333,false,false,false,false,false,false,false,false,false,false,Before
+whatever,med1,inst1,false,false,false,false,false,false,false,false,false,false,Before
