@@ -68,6 +68,23 @@ class csvManager {
     setHeader(type) {
         var header = []
         switch (type) {
+            case 'addMedication':
+            header = [
+                'Name',
+                'Instruction',
+                'Mon',
+                'Tue',
+                'Wed',
+                'Thu',
+                'Fri',
+                'Sat',
+                'Sun',
+                'Morning',
+                'Afternoon',
+                'Night',
+                'Meal'
+            ]
+            break;         
             case 'userDetails':
                 header = [
                     'Username',
@@ -111,7 +128,10 @@ class csvManager {
 
 
 }
-
+// csvManager = new csvManager('addMedication')
+// const records = { Name: 'medicationName',Instruction: 'Instruction', Mon: false, Tue: true, Wed: false, 
+// Thu: false, Fri: true, Sat:true, Sun: false, Morning :true, Afternoon : true, Night:false, Meal: true }
+// csvManager.write(records)
 // csvmanage = new csvManager("userDetails")
 // const records = { Username: 'user', Password: 'pass' }
 // // csvmanage.write(records)
