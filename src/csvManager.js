@@ -66,7 +66,7 @@ class csvManager {
 
         // Async / await usage
         const jsonArray = await csv().fromFile(this.Path);
-        // console.log("Medication data" + JSON.stringify(jsonArray))
+        console.log("Medication data" + JSON.stringify(jsonArray))
         // console.log(jsonArray)
         // console.log(this.checkLogin("user","pass",jsonArray))
         // return this.filterDataFromName(data.Name, jsonArray)
