@@ -26,7 +26,7 @@ io.on('connection', function (socket) {
 // receiving data to save from phone/pi
 io.on('connection', function (socket) {
   socket.on('data', function (data) {
-    console.log('Incoming data' + data);
+    console.log('Incoming data' + data.toString());
     try {
       // timeTaken, questions, watchInfo
       csvManager = require('./csvManager.js');
