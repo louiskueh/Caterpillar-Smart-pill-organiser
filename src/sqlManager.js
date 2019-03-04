@@ -7,31 +7,32 @@ var sqlite3 = require('sqlite3').verbose();
 
 class sqlManager {
 
-    createTable() {
+    createTable(type) {
         var self = this;
         var createTable
         this.db.serialize(function () {
-            var headers = self.setHeader(self.type)
+            var headers = self.setHeader(type)
             console.log("Headers " + headers)
-            createTable = "CREATE TABLE " + self.type + " (";
+            createTable = "CREATE TABLE " + type + " (";
             for (var i = 0; i< headers.length; i++) {
                 createTable = createTable.concat(headers[i] + " string,")
             }
             // get rid of trailing commar
             createTable = createTable.slice(0, -1); 
             createTable = createTable.concat(");")
-            console.log(createTable)
+            // console.log(createTable)
             self.db.run(createTable);
         });
-        this.db.close();
 
         console.log("Created table with query: " + createTable)
     }
 
-    constructor(type) {
+    constructor(type, filename) {
         this.Path = path.basename(__dirname) + '/../resources/storage.csv';
         this.type = type
-        this.db = new sqlite3.Database("resources/storage.db");
+        // storage
+        // test
+        this.db = new sqlite3.Database("resources/" + filename + ".db");
     }
 
 
@@ -167,6 +168,10 @@ class sqlManager {
 
 
 }
-sqlManager = new sqlManager("questions")
-sqlManager.createTable()
+// sqlManager = new sqlManager("questions", "storage")
+// var tables = ['addMedication','userDetails','timeTaken','questions','watchInfo' ]
+// for (var i = 0 ; i < tables.length; i ++) {
+//     sqlManager.createTable(tables[i])
+// }
+// sqlManager.db.close();
 module.exports = sqlManager;
