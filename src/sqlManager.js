@@ -28,9 +28,9 @@ class sqlManager {
         // remember to close after!
     }
 
-    constructor(type, filename) {
-        this.Path = path.basename(__dirname) + '/../resources/storage.csv';
+    constructor(type, filename = "storage") {
         this.type = type
+        console.log(filename)
         // storage
         // test
         this.db = new Database("resources/" + filename + ".db", { verbose: console.log });

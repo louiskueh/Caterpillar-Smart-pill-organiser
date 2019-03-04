@@ -30,11 +30,11 @@ io.on('connection', function (socket) {
     console.log('Incoming data' + data.toString());
     try {
       // timeTaken, questions, watchInfo
-      csvManager = require('./csvManager.js');
-      csvManager = new csvManager(data.type)
+      sqlManager = require('./sqlManager.js');
+      sqlManager = new sqlManager(data.type)
       //format { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
       console.log("recieved data")
-      csvManager.write(data.data)
+      sqlManager.write(data.data)
 
     } catch (error) {
       console.log(error)
@@ -46,26 +46,13 @@ io.on('connection', function (socket) {
 io.on('connection', function (socket) {
   socket.on('login', function (data) {
     console.log('Incoming data');
-    try {
-      // timeTaken, questions, watchInfo
-      csvManager = require('./csvManager.js');
-      csvManager = new csvManager(data.type)
-      // var checkLogin = 
-      // console.log(checkLogin)
-      
-      csvManager.readCheckLogin(data.data).then(object => {
-        success = object.state
-        name = object.name
-        caregiver = object.caregiver
-        console.log("Name: " + name)
-        let objectWrapper = { "Success": success, "Name" :name, "Caregiver" : caregiver  }
-        console.log("Sending over socket IO login Auth : " + objectWrapper.Success + " name:" + objectWrapper.Name +" caregiver:" 
-        + objectWrapper.Caregiver)
-        io.emit('LoginAuth', objectWrapper);
-      })
-    } catch (error) {
-      console.log(error)
-    }
+    // timeTaken, questions, watchInfo
+    sqlManager = require('./sqlManager.js');
+    sqlManager = new sqlManager(data.type)
+    var res = sqlManager.readCheckLogin(data.data)
+    io.emit('LoginAuth', res)
+    console.log("Sending over auth " + res)
+
   });
 });
 
@@ -73,21 +60,12 @@ io.on('connection', function (socket) {
 // Send medication details back
 io.on('connection', function (socket) {
   socket.on('queryMed', function (name) {
-    console.log('Incoming medication for user ' + name );
-    try {
-      // timeTaken, questions, watchInfo
-      csvManager = require('./csvManager.js');
-      csvManager = new csvManager("addMedication")
-      csvManager.readMedicationData(name).then(data => {
-        var filtered = csvManager.filterDataFromName(data,name)
-        console.log(filtered)
-        io.emit('responseMed', filtered);
-      }).catch((error) => {
-        console.log(error)
-      });
-    } catch (error) {
-      console.log(error)
-    }
+    console.log('Incoming medication for user ' + name);
+    // timeTaken, questions, watchInfo
+    sqlManager = require('./sqlManager.js');
+    sqlManager = new sqlManager("addMedication")
+    var res = sqlManager.readMedicationData(name)
+    io.emit("responseMed", res)
   });
 });
 
@@ -101,10 +79,10 @@ io.on('connection', function (socket) {
 // Send medication details back
 io.on('connection', function (socket) {
   socket.on('slot_opened', function (msg) {
-    console.log ( 'slot_opened' + msg)
+    console.log('slot_opened' + msg)
   });
   socket.on('pill', function (msg) {
-    console.log ( 'pill' + msg)
+    console.log('pill' + msg)
   });
 
 
