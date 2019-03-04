@@ -45,12 +45,6 @@ class sqlManager {
         }
         return list
     }
-    // readDatabase(callback) {
-    //     this.db.all("SELECT * from userDetails;", function (err, all) {
-    //         // console.log(all)
-    //         callback(err, all);
-    //     });
-    // };
     readCheckLogin(data) {
         console.log("Recieved login data: " + data.Username + ' | Password ' + data.Password + " |Name: ")
         const stmt = this.db.prepare('SELECT * FROM userDetails WHERE Username=? AND Password=?;');
@@ -65,21 +59,14 @@ class sqlManager {
             console.log("Multiple similar entries")
         }
     }
-    async readMedicationData(data) {
+    readMedicationData(data) {
         console.log("Reading medication data for user " + data)
-        csv()
-            .fromFile(this.Path)
-            .then((jsonObj) => {
-            })
-
-        // Async / await usage
-        const jsonArray = await csv().fromFile(this.Path);
-        console.log("Medication data" + JSON.stringify(jsonArray))
-        // console.log(jsonArray)
-        // console.log(this.checkLogin("user","pass",jsonArray))
-        // return this.filterDataFromName(data.Name, jsonArray)
-        return jsonArray
-
+        const stmt = this.db.prepare('SELECT * FROM addMedication WHERE User=? ;');
+        const result = stmt.all(data);
+        if (result.length >= 1) {
+            return result;
+        }
+        console.log("No entires for user" + data)
     }
 
 
@@ -104,25 +91,8 @@ class sqlManager {
         const stmt = this.db.prepare(insertTable);
         const info = stmt.run();
         console.log("Inserted into table with query " + insertTable + " info :" + JSON.stringify(info));
-        // var stmt = self.db.prepare(insertTable);
-        // for (var i = 0; i < 10; i++) {
-        //     stmt.run("Ipsum " + i);
-        // }
-        // stmt.finalize();
-
         this.db.close()
 
-
-        // var fileStream = fs.createWriteStream(this.Path, { flags: 'a' })
-        // fileStream.on('error', function (err) {
-        //     console.log("Exception occured! Most likely xml file is in use")
-        //     console.log(err);
-        //     fileStream.end();
-        // });
-
-        // this.writer.pipe(fileStream);
-        // this.writer.write(data);
-        // this.writer.end();
     }
 
     setHeader(type) {
@@ -190,7 +160,8 @@ class sqlManager {
 
 
 }
-// sqlManager = new sqlManager("questions", "test")
+// sqlManager = new sqlManager("addMedication", "test")
+// console.log(sqlManager.readMedicationData("user"))
 // var res = sqlManager.readCheckLogin({Username: 'user', Password: 'password'})
 
 // console.log(JSON.stringify(res))
