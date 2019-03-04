@@ -30,7 +30,6 @@ class sqlManager {
 
     constructor(type, filename = "storage") {
         this.type = type
-        console.log(filename)
         // storage
         // test
         this.db = new Database("resources/" + filename + ".db", { verbose: console.log });
@@ -48,7 +47,8 @@ class sqlManager {
     readCheckLogin(data) {
         console.log("Recieved login data: " + data.Username + ' | Password ' + data.Password + " |Name: ")
         const stmt = this.db.prepare('SELECT * FROM userDetails WHERE Username=? AND Password=?;');
-        const result = stmt.all('user', 'password');
+        const result = stmt.all(data.Username, data.Password );
+        // console.log(JSON.stringify(result))
         if (result.length == 0) {
             return { state: "Fail", name: "", caregiver: "" }
         }
@@ -65,8 +65,10 @@ class sqlManager {
         const result = stmt.all(data);
         if (result.length >= 1) {
             return result;
+        }else {
+            return []
         }
-        console.log("No entires for user" + data)
+
     }
 
 

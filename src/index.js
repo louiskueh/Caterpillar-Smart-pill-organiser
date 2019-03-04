@@ -27,13 +27,12 @@ io.on('connection', function (socket) {
 // receiving data to save from phone/pi
 io.on('connection', function (socket) {
   socket.on('data', function (data) {
-    console.log('Incoming data' + data.toString());
+    console.log('Incoming data' + JSON.stringify(data));
     try {
       // timeTaken, questions, watchInfo
       sqlManager = require('./sqlManager.js');
       sqlManager = new sqlManager(data.type)
       //format { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
-      console.log("recieved data")
       sqlManager.write(data.data)
 
     } catch (error) {
@@ -51,7 +50,7 @@ io.on('connection', function (socket) {
     sqlManager = new sqlManager(data.type)
     var res = sqlManager.readCheckLogin(data.data)
     io.emit('LoginAuth', res)
-    console.log("Sending over auth " + res)
+    console.log("Sending over auth " + JSON.stringify(res))
 
   });
 });
@@ -65,6 +64,7 @@ io.on('connection', function (socket) {
     sqlManager = require('./sqlManager.js');
     sqlManager = new sqlManager("addMedication")
     var res = sqlManager.readMedicationData(name)
+    console.log("Medication response " + JSON.stringify(res))
     io.emit("responseMed", res)
   });
 });
