@@ -25,6 +25,7 @@ class sqlManager {
         });
 
         console.log("Created table with query: " + createTable)
+        // remember to close after!
     }
 
     constructor(type, filename) {
@@ -62,7 +63,7 @@ class sqlManager {
     async readCheckLogin(data) {
         console.log("Recieved login data: " + data.Username + ' | Password ' + data.Password + " |Name: ")
         // console.log("Reading data from " + 'resources/' + this.type + '.csv')
-
+        this.db
         csv()
             .fromFile(this.Path)
             .then((jsonObj) => { })
@@ -91,16 +92,42 @@ class sqlManager {
 
 
     write(data) {
-        var fileStream = fs.createWriteStream(this.Path, { flags: 'a' })
-        fileStream.on('error', function (err) {
-            console.log("Exception occured! Most likely xml file is in use")
-            console.log(err);
-            fileStream.end();
+        var self = this
+        this.db.serialize(function () {
+            Object.keys(data).forEach(function(key) {
+
+                console.log(data[key]);
+              
+            });
+            // var headers = self.setHeader(type)
+            // console.log("Headers " + headers)
+            // insertTable = "INSERT INTO " + self.type + " (";
+            // for (var i = 0; i< headers.length; i++) {
+            //     createTable = createTable.concat(headers[i] + " string,")
+            // }
+            // // get rid of trailing commar
+            // insertTable = insertTable.slice(0, -1); 
+            // insertTable = insertTable.concat(");")
+            // // console.log(createTable)
+            // self.db.run(insertTable);
+            // var stmt = self.db.prepare("INSERT INTO lorem VALUES (?)");
+            // for (var i = 0; i < 10; i++) {
+            //     stmt.run("Ipsum " + i);
+            // }
+            // stmt.finalize();
         });
 
-        this.writer.pipe(fileStream);
-        this.writer.write(data);
-        this.writer.end();
+
+        // var fileStream = fs.createWriteStream(this.Path, { flags: 'a' })
+        // fileStream.on('error', function (err) {
+        //     console.log("Exception occured! Most likely xml file is in use")
+        //     console.log(err);
+        //     fileStream.end();
+        // });
+
+        // this.writer.pipe(fileStream);
+        // this.writer.write(data);
+        // this.writer.end();
     }
 
     setHeader(type) {
@@ -174,4 +201,9 @@ class sqlManager {
 //     sqlManager.createTable(tables[i])
 // }
 // sqlManager.db.close();
+
+// user reg
+const records = { Username: 'user', Password: 'pass', Name: "name", Caregiver: "careGiver" }
+sqlManager = new sqlManager("questions", "storage")
+sqlManager.write(records)
 module.exports = sqlManager;
