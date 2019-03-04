@@ -94,28 +94,31 @@ class sqlManager {
     write(data) {
         var self = this
         this.db.serialize(function () {
+     
+            var insertTable = "INSERT INTO " + self.type + " (";
+            // setup columns
             Object.keys(data).forEach(function(key) {
-
-                console.log(data[key]);
-              
+                insertTable = insertTable.concat(key + ",")
             });
-            // var headers = self.setHeader(type)
-            // console.log("Headers " + headers)
-            // insertTable = "INSERT INTO " + self.type + " (";
-            // for (var i = 0; i< headers.length; i++) {
-            //     createTable = createTable.concat(headers[i] + " string,")
-            // }
-            // // get rid of trailing commar
-            // insertTable = insertTable.slice(0, -1); 
-            // insertTable = insertTable.concat(");")
-            // // console.log(createTable)
-            // self.db.run(insertTable);
-            // var stmt = self.db.prepare("INSERT INTO lorem VALUES (?)");
+            insertTable = insertTable.slice(0, -1); 
+            insertTable = insertTable.concat(") VALUES (")
+            // add values
+            Object.keys(data).forEach(function(key) {
+                insertTable = insertTable.concat("'" + data[key] + "'" + ",")
+
+            });
+            insertTable = insertTable.slice(0, -1); 
+            insertTable = insertTable.concat(");")
+            // console.log(createTable)
+            self.db.run(insertTable);
+            console.log("Inserted into table with query " + insertTable);
+            // var stmt = self.db.prepare(insertTable);
             // for (var i = 0; i < 10; i++) {
             //     stmt.run("Ipsum " + i);
             // }
             // stmt.finalize();
         });
+        this.db.close()
 
 
         // var fileStream = fs.createWriteStream(this.Path, { flags: 'a' })
@@ -195,15 +198,16 @@ class sqlManager {
 
 
 }
-// sqlManager = new sqlManager("questions", "storage")
+// sqlManager = new sqlManager("questions", "test")
 // var tables = ['addMedication','userDetails','timeTaken','questions','watchInfo' ]
 // for (var i = 0 ; i < tables.length; i ++) {
 //     sqlManager.createTable(tables[i])
 // }
 // sqlManager.db.close();
-
-// user reg
+var tableName = "userDetails"
+sqlManager = new sqlManager(tableName,"test")
 const records = { Username: 'user', Password: 'pass', Name: "name", Caregiver: "careGiver" }
-sqlManager = new sqlManager("questions", "storage")
 sqlManager.write(records)
+// user reg
+
 module.exports = sqlManager;

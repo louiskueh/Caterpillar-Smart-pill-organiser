@@ -1,32 +1,19 @@
 
-// describe("Player", function() {
-//   sqlManager = require ('../../src/sqlManager')
-//   sqlManager = new sqlManager("questions", "test")
-//   var tables = ['addMedication','userDetails','timeTaken','questions','watchInfo' ]
-//   for (var i = 0 ; i < tables.length; i ++) {
-//       sqlManager.createTable(tables[i])
-//   }
-//   sqlManager.db.close();
-  // beforeEach(function() {
-  //   player = new Player();
-  //   song = new Song();
-  // });
-
-  // it("Setup questions database", function() {
-  //   sqlManager = new sqlManager("questions","test")
-  //   sqlManager.createTable()
-  //   player.play(song);
-
-  //   sqlManager.db.serialize(function() {
-  //     sqlManager.db.each("SELECT name FROM questions WHERE type='table' AND name='questions';", function(err, row) {
-  //         console.log(row.id + ": " + row.info);
-  //     });
-  //   });
-     
-  //   sqlManager.db.close();
-  //   //demonstrates use of custom matcher
-  //   // expect(player).toBePlaying(song);
-  // });
+describe("DatabaseTesting", function() {
+  it("Insert userDetails", function() {
+    var tableName = "userDetails"
+    sqlManager = require ('../../src/sqlManager')
+    sqlManager = new sqlManager(tableName,"test")
+    const records = { Username: 'user', Password: 'pass', Name: "name", Caregiver: "careGiver" }
+    sqlManager.write(records)
+    // doesnt work
+    // sqlManager.db.serialize(function() {
+    //   sqlManager.db.each("SELECT * FROM " + tableName, function(err, row) {
+    //       console.log(row.id + ": " + row.info);
+    //   });
+    // });
+  
+  });
 
   // describe("when song has been paused", function() {
   //   beforeEach(function() {
