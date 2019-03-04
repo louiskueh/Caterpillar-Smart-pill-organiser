@@ -9,35 +9,29 @@ class sqlManager {
 
     createTable() {
         var self = this;
+        var createTable
         this.db.serialize(function () {
             var headers = self.setHeader(self.type)
             console.log("Headers " + headers)
-            var createTable = "CREATE TABLE + " + self.type + " (";
-            for (var x in headers) {
-                createTable = createTable.concat(x + " string,")
+            createTable = "CREATE TABLE " + self.type + " (";
+            for (var i = 0; i< headers.length; i++) {
+                createTable = createTable.concat(headers[i] + " string,")
             }
+            // get rid of trailing commar
+            createTable = createTable.slice(0, -1); 
             createTable = createTable.concat(");")
             console.log(createTable)
-
-            // var stmt = this.db.prepare("INSERT INTO lorem VALUES (?)");
-            // for (var i = 0; i < 10; i++) {
-            //     stmt.run("Ipsum " + i);
-            // }
-            // stmt.finalize();
-
-            // this.db.each("SELECT rowid AS id, info FROM lorem", function (err, row) {
-            //     console.log(row.id + ": " + row.info);
-            // });
+            self.db.run(createTable);
         });
+        this.db.close();
+
+        console.log("Created table with query: " + createTable)
     }
 
     constructor(type) {
         this.Path = path.basename(__dirname) + '/../resources/storage.csv';
         this.type = type
         this.db = new sqlite3.Database("resources/storage.db");
-
-        this.createTable()
-
     }
 
 
@@ -174,5 +168,5 @@ class sqlManager {
 
 }
 sqlManager = new sqlManager("questions")
-
+sqlManager.createTable()
 module.exports = sqlManager;
