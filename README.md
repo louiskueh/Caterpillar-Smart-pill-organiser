@@ -2,7 +2,7 @@
 Chat example hosted on gcloud server
 * socket io needs to be ^1.7.4
 35.246.29.217:65080/
-
+* use `sudo npm start`
 # Test object
 
 * display csv command line 
