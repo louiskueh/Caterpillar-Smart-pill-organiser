@@ -7,13 +7,18 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
+function findDifference(a, b) {
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] != b[i]) return i + 1;
+  }
+}
 io.on('connection', function (socket) {
   socket.on('new message', function (msg) {
     console.log('msg recieved: ' + msg);
     io.emit("slot_to_open", msg)
     let message = { "message": msg }
     io.emit('new message', message);
- 
+
     console.log("sent slot to open to" + message)
   });
 
@@ -79,12 +84,44 @@ io.on('connection', function (socket) {
 // 'slot_opened' : true / false 
 // 'pill'  : present/ taken
 // Send medication details back
+var previousPillTaken
+var boxToSend = 1
+var start = false;
 io.on('connection', function (socket) {
   socket.on('slot_lid', function (msg) {
-    console.log ( 'slot_lid' + msg)
+    console.log('slot_lid' + msg)
   });
   socket.on('pill_presence', function (msg) {
-    console.log ( 'pill_presence' + msg)
+    if (msg == '111111') { start = true }
+    else if (msg == '000000') { 
+      // reset cycle
+      start = false
+      // 0 since it will be different on new cycle
+      boxToSend = 0
+    }
+
+    console.log('previous pill' + previousPillTaken)
+    console.log('pill_presence ' + msg)
+    // if we are in cycle
+    if (start) {
+      if (previousPillTaken == null) {
+        previousPillTaken = msg
+      } else {
+        //compare to see if difference
+        if (msg != previousPillTaken) {
+          boxToSend = (boxToSend % 6) + 1;
+          previousPillTaken = msg
+        } else {
+          console.log("no difference from before")
+        }
+
+      }
+
+    }
+    console.log("in cycle " + start)
+    console.log("pill to open " + (boxToSend) + ' \n')
+
+
   });
 
 
@@ -95,3 +132,10 @@ http.listen(port, function () {
 });
 
 
+
+// Send medication details back
+io.on('connection', function (socket) {
+  socket.on('accData', function (data) {
+    console.log('accData ' + data);
+  });
+});

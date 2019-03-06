@@ -2,6 +2,11 @@
 Chat example hosted on gcloud server
 * socket io needs to be ^1.7.4
 35.246.29.217:65080/
+# Pill
+* get times for next pill 
+* when time reaches, emit indicator to pillbox as to which box to open next
+* once pill is taken record time taken
+
 # Pi interface
 
 * Recieve from PI - [0,1,1,1,1,1,1] - 6 values in a list
