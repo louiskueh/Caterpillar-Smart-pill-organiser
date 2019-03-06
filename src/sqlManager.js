@@ -2,56 +2,37 @@ var fs = require('fs');
 var path = require('path');
 
 
-var sqlite3 = require('sqlite3').verbose();
+var Database = require('better-sqlite3');
 
 
 class sqlManager {
 
-    createTable() {
+    createTable(type) {
         var self = this;
+        var createTable
         this.db.serialize(function () {
-            var headers = self.setHeader(self.type)
+            var headers = self.setHeader(type)
             console.log("Headers " + headers)
-            var createTable = "CREATE TABLE + " + self.type + " (";
-            for (var x in headers) {
-                createTable = createTable.concat(x + " string,")
+            createTable = "CREATE TABLE " + type + " (";
+            for (var i = 0; i < headers.length; i++) {
+                createTable = createTable.concat(headers[i] + " string,")
             }
+            // get rid of trailing commar
+            createTable = createTable.slice(0, -1);
             createTable = createTable.concat(");")
-            console.log(createTable)
-
-            // var stmt = this.db.prepare("INSERT INTO lorem VALUES (?)");
-            // for (var i = 0; i < 10; i++) {
-            //     stmt.run("Ipsum " + i);
-            // }
-            // stmt.finalize();
-
-            // this.db.each("SELECT rowid AS id, info FROM lorem", function (err, row) {
-            //     console.log(row.id + ": " + row.info);
-            // });
+            // console.log(createTable)
+            self.db.run(createTable);
         });
+
+        console.log("Created table with query: " + createTable)
+        // remember to close after!
     }
 
-    constructor(type) {
-        this.Path = path.basename(__dirname) + '/../resources/storage.csv';
+    constructor(type, filename = "storage") {
         this.type = type
-        this.db = new sqlite3.Database("resources/storage.db");
-
-        this.createTable()
-
-    }
-
-
-    checkLogin(Username, Password, data) {
-        for (var i = 0; i < data.length; i++) {
-            if (Username == data[i].Username && Password == data[i].Password) {
-                return { state: "Success", name: data[i].Name, caregiver: data[i].Caregiver }
-            }
-        }
-        return { state: "Fail", name: "", caregiver: "" }
-        // var result = data.map(item => (item.Username == Username && item.Password == Password) ? true : false)
-        // console.log(result)
-        // if (result.includes(true)) return true
-        // else return false;
+        // storage
+        // test
+        this.db = new Database("resources/" + filename + ".db", { verbose: console.log });
     }
     filterDataFromName(data, name) {
         var list = []
@@ -63,49 +44,57 @@ class sqlManager {
         }
         return list
     }
-
-    async readCheckLogin(data) {
+    readCheckLogin(data) {
         console.log("Recieved login data: " + data.Username + ' | Password ' + data.Password + " |Name: ")
-        // console.log("Reading data from " + 'resources/' + this.type + '.csv')
-
-        csv()
-            .fromFile(this.Path)
-            .then((jsonObj) => { })
-        // Async / await usage
-        const jsonArray = await csv().fromFile(this.Path);
-        // console.log(jsonArray)
-        // console.log(this.checkLogin("user","pass",jsonArray))
-        return this.checkLogin(data.Username, data.Password, jsonArray)
+        const stmt = this.db.prepare('SELECT * FROM userDetails WHERE Username=? AND Password=?;');
+        const result = stmt.all(data.Username, data.Password );
+        // console.log(JSON.stringify(result))
+        if (result.length == 0) {
+            return { state: "Fail", name: "", caregiver: "" }
+        }
+        else if (result.length == 1) {
+            return { state: "Success", name: result[0].Name, caregiver: result[0].Caregiver }
+        }
+        else {
+            console.log("Multiple similar entries")
+        }
     }
-    async readMedicationData(data) {
+    readMedicationData(data) {
         console.log("Reading medication data for user " + data)
-        csv()
-            .fromFile(this.Path)
-            .then((jsonObj) => {
-            })
-
-        // Async / await usage
-        const jsonArray = await csv().fromFile(this.Path);
-        console.log("Medication data" + JSON.stringify(jsonArray))
-        // console.log(jsonArray)
-        // console.log(this.checkLogin("user","pass",jsonArray))
-        // return this.filterDataFromName(data.Name, jsonArray)
-        return jsonArray
+        const stmt = this.db.prepare('SELECT * FROM addMedication WHERE User=? ;');
+        const result = stmt.all(data);
+        if (result.length >= 1) {
+            return result;
+        }else {
+            return []
+        }
 
     }
 
 
     write(data) {
-        var fileStream = fs.createWriteStream(this.Path, { flags: 'a' })
-        fileStream.on('error', function (err) {
-            console.log("Exception occured! Most likely xml file is in use")
-            console.log(err);
-            fileStream.end();
-        });
 
-        this.writer.pipe(fileStream);
-        this.writer.write(data);
-        this.writer.end();
+
+        var insertTable = "INSERT INTO " + this.type + " (";
+        // setup columns
+        Object.keys(data).forEach(function (key) {
+            insertTable = insertTable.concat(key + ",")
+        });
+        insertTable = insertTable.slice(0, -1);
+        insertTable = insertTable.concat(") VALUES (")
+        // add values
+        Object.keys(data).forEach(function (key) {
+            insertTable = insertTable.concat("'" + data[key] + "'" + ",")
+
+        });
+        insertTable = insertTable.slice(0, -1);
+        insertTable = insertTable.concat(");")
+        // console.log(createTable)
+        const stmt = this.db.prepare(insertTable);
+        const info = stmt.run();
+        console.log("Inserted into table with query " + insertTable + " info :" + JSON.stringify(info));
+        this.db.close()
+
     }
 
     setHeader(type) {
@@ -173,6 +162,25 @@ class sqlManager {
 
 
 }
-sqlManager = new sqlManager("questions")
+// sqlManager = new sqlManager("addMedication", "test")
+// console.log(sqlManager.readMedicationData("user"))
+// var res = sqlManager.readCheckLogin({Username: 'user', Password: 'password'})
 
+// console.log(JSON.stringify(res))
+// sqlManager = new sqlManager("questions", "test")
+// var tables = ['addMedication','userDetails','timeTaken','questions','watchInfo' ]
+// for (var i = 0 ; i < tables.length; i ++) {
+//     sqlManager.createTable(tables[i])
+// }
+// sqlManager.db.close();
+
+// sqlManager = new sqlManager("userDetails", "test")
+// const records = { Username: 'user2', Password: 'pass2', Name: "name2", Caregiver: "careGiver2" }
+// sqlManager.write(records)
+
+
+// const records = { User: 'user', Name: 'medicationName2',Instruction: 'Instruction', Mon: false, Tue: true, Wed: false, 
+// Thu: false, Fri: true, Sat:true, Sun: false, Morning :true, Afternoon : true, Night:false, Meal: true }
+// sqlManager = new sqlManager("addMedication","test")
+// sqlManager.write(records)
 module.exports = sqlManager;
