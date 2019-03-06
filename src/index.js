@@ -10,9 +10,11 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
   socket.on('new message', function (msg) {
     console.log('msg recieved: ' + msg);
+    io.emit("slot_to_open", msg)
     let message = { "message": msg }
     io.emit('new message', message);
-    socket.emit("pill_slot", "1")
+ 
+    console.log("sent slot to open to" + message)
   });
 
 });
@@ -100,11 +102,11 @@ io.on('connection', function (socket) {
 // 'pill'  : present/ taken
 // Send medication details back
 io.on('connection', function (socket) {
-  socket.on('slot_opened', function (msg) {
-    console.log ( 'slot_opened' + msg)
+  socket.on('slot_lid', function (msg) {
+    console.log ( 'slot_lid' + msg)
   });
-  socket.on('pill', function (msg) {
-    console.log ( 'pill' + msg)
+  socket.on('pill_presence', function (msg) {
+    console.log ( 'pill_presence' + msg)
   });
 
 
