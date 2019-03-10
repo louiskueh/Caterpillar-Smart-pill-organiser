@@ -1,6 +1,15 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var schedule = require('node-schedule');
+// 0 - january, 11 - december
+// var date = new Date(2019, 11, 21, 5, 30, 0);
+// console.log(Date.now())
+// let startTime = new Date(Date.now() + 5000);
+// var j = schedule.scheduleJob(startTime, function(){
+//   console.log('Running at date ' + startTime);
+// });
+
 
 var port = 65080;
 app.get('/', function (req, res) {
