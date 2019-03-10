@@ -1,26 +1,12 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var schedule = require('node-schedule');
-// 0 - january, 11 - december
-// var date = new Date(2019, 11, 21, 5, 30, 0);
-// console.log(Date.now())
-// let startTime = new Date(Date.now() + 5000);
-// var j = schedule.scheduleJob(startTime, function(){
-//   console.log('Running at date ' + startTime);
-// });
-
 
 var port = 65080;
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-function findDifference(a, b) {
-  for (var i = 0; i < a.length; i++) {
-    if (a[i] != b[i]) return i + 1;
-  }
-}
 io.on('connection', function (socket) {
   socket.on('new message', function (msg) {
     console.log('msg recieved: ' + msg);
@@ -102,7 +88,7 @@ io.on('connection', function (socket) {
   });
   socket.on('pill_presence', function (msg) {
     if (msg == '111111') { start = true }
-    else if (msg == '000000') { 
+    else if (msg == '000000') {
       // reset cycle
       start = false
       // 0 since it will be different on new cycle
@@ -123,23 +109,27 @@ io.on('connection', function (socket) {
         } else {
           console.log("no difference from before")
         }
-
       }
-
     }
     console.log("in cycle " + start)
     console.log("pill to open " + (boxToSend) + ' \n')
-
-
   });
-
-
 });
+// ========================= Schedule =====================
+// upon recieving, save into variable and set schedule
+// job.nextInvocation() to get date that it is scheduled
+var schedule = require('node-schedule');
+// 0 - january, 11 - december
+// var date = new Date(2019, 11, 21, 5, 30, 0);
+// console.log(Date.now())
+// let startTime = new Date(Date.now() + 5000);
+// var morning = schedule.scheduleJob(startTime, function(){
+//   console.log('Running at date ' + startTime);
+// });
 
 http.listen(port, function () {
   console.log('listening on *:' + port);
 });
-
 
 
 // Send medication details back
