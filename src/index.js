@@ -29,6 +29,8 @@ io.on('connection', function (socket) {
     io.emit("slot_to_open", msg)
     let message = { "message": msg }
     io.emit('new message', message);
+
+
     console.log("Sending notification in 5 seconds" )
     // after sending a new message, we start a notification that increases every 5 seconds
     SetInterval.start(incrementAlert, 5000, 'increaseAlertLevel')
@@ -104,6 +106,9 @@ io.on('connection', function (socket) {
     console.log('slot_lid' + msg)
   });
   socket.on('pill_presence', function (msg) {
+    //repeat
+    io.emit('pill_presence', msg)
+    console.log("repeated")
     if (msg == '1111') { start = true }
     else if (msg == '0000') {
       // reset cycle
@@ -127,8 +132,13 @@ io.on('connection', function (socket) {
           sqlManager = new sqlManager('timeTaken')
           var currentTime = new Date();
           var data = { Username: 'user', Timestamp: currentTime.toString(), BoxNo: boxToSend }
+
           //format { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
           sqlManager.write(data)
+
+          // send to machine learning
+          data = {hour: currentTime.getHours, minute: currentTime.getMinutes, second: currentTime.getSeconds}
+          io.emit ("newTime", data)
 
           // update state
           boxToSend = (boxToSend % 4) + 1;
