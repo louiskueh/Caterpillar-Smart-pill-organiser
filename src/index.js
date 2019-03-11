@@ -103,12 +103,12 @@ io.on('connection', function (socket) {
   socket.on('slot_lid', function (msg) {
     // TODO: When thy open wrong box
     // do on PI, when they open a slot without LED
-    console.log('slot_lid' + msg)
+    console.log('slot_lid ' + msg)
   });
   socket.on('pill_presence', function (msg) {
-    //repeat
+    //repeater
     io.emit('pill_presence', msg)
-    console.log("repeated")
+    // console.log("repeated")
     if (msg == '1111') { start = true }
     else if (msg == '0000') {
       // reset cycle
@@ -137,8 +137,11 @@ io.on('connection', function (socket) {
           sqlManager.write(data)
 
           // send to machine learning
-          data = {hour: currentTime.getHours, minute: currentTime.getMinutes, second: currentTime.getSeconds}
+          data = {hour: (currentTime.getHours()).toString(), minute: (currentTime.getMinutes()).toString()
+            , second: (currentTime.getSeconds()).toString()}
+
           io.emit ("newTime", data)
+          // console.log("Send to newTime" + JSON.stringify(data))
 
           // update state
           boxToSend = (boxToSend % 4) + 1;
