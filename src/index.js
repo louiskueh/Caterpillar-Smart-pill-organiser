@@ -95,7 +95,7 @@ io.on('connection', function (socket) {
       boxToSend = 0
     }
 
-    console.log('previous pill' + previousPillTaken)
+    console.log('previous pill ' + previousPillTaken)
     console.log('pill_presence ' + msg)
     // if we are in cycle
     if (start) {
@@ -104,6 +104,17 @@ io.on('connection', function (socket) {
       } else {
         //compare to see if difference
         if (msg != previousPillTaken) {
+          // TODO: write to DB and save time
+
+          // timeTaken, questions, watchInfo
+          sqlManager = require('./sqlManager.js');
+          sqlManager = new sqlManager('timeTaken')
+          var currentTime = new Date();
+          var data = { Username: 'user', Timestamp: currentTime.toString(), BoxNo: boxToSend }
+          //format { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
+          sqlManager.write(data)
+
+          // update state
           boxToSend = (boxToSend % 6) + 1;
           previousPillTaken = msg
         } else {
