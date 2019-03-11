@@ -1,20 +1,38 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-
+var SetInterval = require('set-interval')
+var base64ToImage = require('base64-to-image');
 var port = 65080;
+var schedule = require('node-schedule');
+
+var alertLevel = 1;
+
+var previousPillTaken
+var boxToSend = 1
+var start = false;
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
+function incrementAlert () {
+  if ( alertLevel != 5) {
+    alertLevel = alertLevel  + 1
+    io.emit("alertLevel", alertLevel)
+  }
+  console.log("Alert Level is " + alertLevel)
+}
 
 io.on('connection', function (socket) {
   socket.on('new message', function (msg) {
     console.log('msg recieved: ' + msg);
+
     io.emit("slot_to_open", msg)
     let message = { "message": msg }
     io.emit('new message', message);
-
-    console.log("sent slot to open to" + message)
+    console.log("Sending notification in 5 seconds" )
+    // after sending a new message, we start a notification that increases every 5 seconds
+    SetInterval.start(incrementAlert, 5000, 'increaseAlertLevel')
+    
   });
 
 });
@@ -36,7 +54,6 @@ io.on('connection', function (socket) {
       sqlManager = new sqlManager(data.type)
       //format { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
       sqlManager.write(data.data)
-
     } catch (error) {
       console.log(error)
     }
@@ -79,22 +96,21 @@ io.on('connection', function (socket) {
 // 'slot_opened' : true / false 
 // 'pill'  : present/ taken
 // Send medication details back
-var previousPillTaken
-var boxToSend = 1
-var start = false;
+
 io.on('connection', function (socket) {
   socket.on('slot_lid', function (msg) {
+    // TODO: When thy open wrong box
+    // do on PI, when they open a slot without LED
     console.log('slot_lid' + msg)
   });
   socket.on('pill_presence', function (msg) {
-    if (msg == '111111') { start = true }
-    else if (msg == '000000') {
+    if (msg == '1111') { start = true }
+    else if (msg == '0000') {
       // reset cycle
       start = false
       // 0 since it will be different on new cycle
       boxToSend = 0
     }
-
     console.log('previous pill ' + previousPillTaken)
     console.log('pill_presence ' + msg)
     // if we are in cycle
@@ -115,7 +131,7 @@ io.on('connection', function (socket) {
           sqlManager.write(data)
 
           // update state
-          boxToSend = (boxToSend % 6) + 1;
+          boxToSend = (boxToSend % 4) + 1;
           previousPillTaken = msg
         } else {
           console.log("no difference from before")
@@ -129,7 +145,7 @@ io.on('connection', function (socket) {
 // ========================= Schedule =====================
 // upon recieving, save into variable and set schedule
 // job.nextInvocation() to get date that it is scheduled
-var schedule = require('node-schedule');
+
 // 0 - january, 11 - december
 // var date = new Date(2019, 11, 21, 5, 30, 0);
 // console.log(Date.now())
@@ -149,3 +165,31 @@ io.on('connection', function (socket) {
     console.log('accData ' + data);
   });
 });
+
+
+io.on('connection', function (socket) {
+  socket.on('newAlertLevel', function (data) {
+    alertLevel = data
+    io.emit("alertLevel", alertLevel)
+  });
+});
+
+
+
+
+// Send medication details back
+// io.on('connection', function (socket) {
+//   socket.on('train_image', function (data) {
+//     console.log('train_image ' + JSON.stringify(data));
+//     var currentTime = new Date();
+//     var optionalObj = {'fileName': currentTime.toString(), 'type':'jpeg'};
+//     var path ='resources/faceImg/' + data.userID;
+//     console.log(path)
+//     base64ToImage( data.imageData,path,optionalObj); 
+//     console.log("saved to image " + path )
+
+//     // var img = new Image();
+//     // img.src = 'data:image/jpeg;base64,' + data.imageData
+
+//   });
+// });
