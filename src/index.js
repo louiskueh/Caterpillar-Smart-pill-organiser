@@ -151,6 +151,7 @@ io.on('connection', function (socket) {
       boxToSend = 0
       SetInterval.clear('increaseAlertLevel')
       io.emit ("slot_to_open", "100")
+      io.emit("intakeDone", "true")
     }
     console.log('previous pill ' + previousPillTaken)
     console.log('pill_presence ' + msg)
@@ -174,13 +175,13 @@ io.on('connection', function (socket) {
           // when app recieved save data and write to file
 
           // timeTaken, questions, watchInfo
-          sqlManager = require('./sqlManager.js');
-          sqlManager = new sqlManager('timeTaken')
+          // sqlManager = require('./sqlManager.js');
+          // sqlManager = new sqlManager('timeTaken')
           var currentTime = new Date();
-          var data = { Username: 'user', Timestamp: currentTime.toString(), BoxNo: boxToSend }
+          // var data = { Username: 'user', Timestamp: currentTime.toString(), BoxNo: boxToSend }
 
           //format { Timestamp: '11:00:00', Day: 'Monday', BoxNo: '1' }
-          sqlManager.write(data)
+          // sqlManager.write(data)
 
           // send to machine learning
           data = {

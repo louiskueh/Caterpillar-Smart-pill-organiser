@@ -128,10 +128,9 @@ class sqlManager {
                 break;
             case 'timeTaken':
                 header = [
-                    'Username',
+                    'User',
                     'Timestamp',
-                    'Day',
-                    'BoxNo'
+                    'MedName'
                 ]
                 break;
             case 'questions':
