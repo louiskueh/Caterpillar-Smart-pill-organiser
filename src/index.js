@@ -17,9 +17,10 @@ app.get('/', function (req, res) {
 function incrementAlert() {
   if (alertLevel != 5) {
     alertLevel = alertLevel + 1
-    let message = {"alertLevel" : alertLevel, "boxToSend" : boxToSend}
-    io.emit("startNotification", message)
+
   }
+  let message = {"alertLevel" : alertLevel, "boxToSend" : boxToSend}
+  io.emit("startNotification", message)
   console.log("Alert Level is " + alertLevel)
 }
 function startNotification (){
@@ -119,7 +120,8 @@ io.on('connection', function (socket) {
 io.on('connection', function (socket) {
   // if lid opened is wrong
   socket.on('wrong_slot', function (msg) {
-    if (msg == "0") {
+    // console.log("Slot state " + msg)
+    if (msg == "0" || msg == "2") {
       io.emit("correct_lid", "true")
       console.log("correct lid opened!")
     }
@@ -147,6 +149,8 @@ io.on('connection', function (socket) {
       start = false
       // 0 since it will be different on new cycle
       boxToSend = 0
+      SetInterval.clear('increaseAlertLevel')
+      io.emit ("slot_to_open", "100")
     }
     console.log('previous pill ' + previousPillTaken)
     console.log('pill_presence ' + msg)
@@ -161,7 +165,8 @@ io.on('connection', function (socket) {
           // reset lights when pill is taken
           SetInterval.clear('increaseAlertLevel')
           io.emit ("slot_to_open", "100")
-          
+          io.emit("intakeDone", "true")
+          console.log("Intake done")
           // setup 
 
           // stop emmitting 
