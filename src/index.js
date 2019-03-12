@@ -17,15 +17,20 @@ app.get('/', function (req, res) {
 function incrementAlert() {
   if (alertLevel != 5) {
     alertLevel = alertLevel + 1
-    io.emit("alertLevel", alertLevel)
+    let message = {"alertLevel" : alertLevel, "boxToSend" : boxToSend}
+    io.emit("startNotification", message)
   }
   console.log("Alert Level is " + alertLevel)
 }
 function startNotification (){
   // send which box to open
-  io.emit ("slot_to_open", boxToSend)
+
+  io.emit ("slot_to_open", boxToSend.toString())
+  console.log("slot to open " + boxToSend.toString())
   console.log("Sending notification in 5 seconds")
   // after sending a new message, we start a notification that increases every 5 seconds
+  let message = {"alertLevel" : alertLevel, "boxToSend" : boxToSend}
+  io.emit ("startNotification", message)
   SetInterval.start(incrementAlert, 5000, 'increaseAlertLevel')
 }
 
@@ -38,7 +43,13 @@ io.on('connection', function (socket) {
     io.emit('new message', message);
 
     // for now start notification once we send a chat msg
-    startNotification()
+    if (msg == 'start')
+    {
+      startNotification()
+    }else{
+      io.emit ("slot_to_open", msg)
+    }
+
 
 
   });
@@ -108,6 +119,10 @@ io.on('connection', function (socket) {
 io.on('connection', function (socket) {
   // if lid opened is wrong
   socket.on('wrong_slot', function (msg) {
+    if (msg == "0") {
+      io.emit("correct_lid", "true")
+      console.log("correct lid opened!")
+    }
     if (msg == "1") {
       io.emit("wrong_lid", "true")
       console.log("wrong lid opened!")
@@ -142,8 +157,14 @@ io.on('connection', function (socket) {
       } else {
         //compare to see if difference
         if (msg != previousPillTaken) {
+          // stop increasing interval
           // reset lights when pill is taken
+          SetInterval.clear('increaseAlertLevel')
           io.emit ("slot_to_open", "100")
+          
+          // setup 
+
+          // stop emmitting 
           // Send message to app
           // when app recieved save data and write to file
 
@@ -206,7 +227,7 @@ io.on('connection', function (socket) {
   socket.on('newAlertLevel', function (data) {
     alertLevel = data
     io.emit("alertLevel", alertLevel)
-    console.log("received alert level")
+    console.log("received alert level " + alertLevel)
   });
 });
 
