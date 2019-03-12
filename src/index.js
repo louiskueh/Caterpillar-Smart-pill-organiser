@@ -14,27 +14,33 @@ var start = false;
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
-function incrementAlert () {
-  if ( alertLevel != 5) {
-    alertLevel = alertLevel  + 1
+function incrementAlert() {
+  if (alertLevel != 5) {
+    alertLevel = alertLevel + 1
     io.emit("alertLevel", alertLevel)
   }
   console.log("Alert Level is " + alertLevel)
+}
+function startNotification (){
+  // send which box to open
+  io.emit ("slot_to_open", boxToSend)
+  console.log("Sending notification in 5 seconds")
+  // after sending a new message, we start a notification that increases every 5 seconds
+  SetInterval.start(incrementAlert, 5000, 'increaseAlertLevel')
 }
 
 io.on('connection', function (socket) {
   socket.on('new message', function (msg) {
     console.log('msg recieved: ' + msg);
-
-    io.emit("slot_to_open", msg)
+    // io.emit ("slot_to_open", msg)
+    // io.emit("slot_to_open", msg)
     let message = { "message": msg }
     io.emit('new message', message);
 
+    // for now start notification once we send a chat msg
+    startNotification()
 
-    console.log("Sending notification in 5 seconds" )
-    // after sending a new message, we start a notification that increases every 5 seconds
-    SetInterval.start(incrementAlert, 5000, 'increaseAlertLevel')
-    
+
   });
 
 });
@@ -100,20 +106,25 @@ io.on('connection', function (socket) {
 // Send medication details back
 
 io.on('connection', function (socket) {
-  // socket.on('correct_slot', function (msg)){
-  //   // correct = 1
-  //   // wrong = 2 
-  // });
+  // if lid opened is wrong
+  socket.on('wrong_slot', function (msg) {
+    if (msg == "1") {
+      io.emit("wrong_lid", "true")
+      console.log("wrong lid opened!")
+    }
+    // correct = 1
+    // wrong = 2 
+  });
   socket.on('slot_lid', function (msg) {
     // TODO: When thy open wrong box
     // do on PI, when they open a slot without LED
-    console.log('slot_lid ' + msg)
+    // console.log('slot_lid ' + msg)
   });
   socket.on('pill_presence', function (msg) {
-    
-    msg= String(msg).replace( /,/g, "" );
+
+    msg = String(msg).replace(/,/g, "");
     //repeater
-    io.emit('pill_presence', {emptyState: msg})
+    io.emit('pill_presence', { emptyState: msg })
     // console.log("repeated")
     if (msg == '1111') { start = true }
     else if (msg == '0000') {
@@ -131,7 +142,10 @@ io.on('connection', function (socket) {
       } else {
         //compare to see if difference
         if (msg != previousPillTaken) {
-          // TODO: write to DB and save time
+          // reset lights when pill is taken
+          io.emit ("slot_to_open", "100")
+          // Send message to app
+          // when app recieved save data and write to file
 
           // timeTaken, questions, watchInfo
           sqlManager = require('./sqlManager.js');
@@ -143,11 +157,13 @@ io.on('connection', function (socket) {
           sqlManager.write(data)
 
           // send to machine learning
-          data = {hour: (currentTime.getHours()).toString(), minute: (currentTime.getMinutes()).toString()
-            , second: (currentTime.getSeconds()).toString()}
+          data = {
+            hour: (currentTime.getHours()).toString(), minute: (currentTime.getMinutes()).toString()
+            , second: (currentTime.getSeconds()).toString()
+          }
 
-          io.emit ("newTime", data)
-          // console.log("Send to newTime" + JSON.stringify(data))
+          io.emit("newTime", data)
+          console.log("Send to newTime" + JSON.stringify(data))
 
           // update state
           boxToSend = (boxToSend % 4) + 1;
@@ -190,6 +206,7 @@ io.on('connection', function (socket) {
   socket.on('newAlertLevel', function (data) {
     alertLevel = data
     io.emit("alertLevel", alertLevel)
+    console.log("received alert level")
   });
 });
 
