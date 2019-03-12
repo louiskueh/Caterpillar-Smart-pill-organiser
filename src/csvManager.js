@@ -138,10 +138,8 @@ class csvManager {
             case 'watchInfo':
                 header = [
                     'Username',
-                    'accelX',
-                    'accelY',
-                    'accelZ',
-                    'heartRate'
+                    'wakeTime',
+                    'sleepTime'
                 ]
                 break;
             default: console.log("type not found!")

@@ -67,7 +67,7 @@ io.on('connection', function (socket) {
 // receiving data to save from phone/pi
 io.on('connection', function (socket) {
   socket.on('data', function (data) {
-    console.log('Incoming data' + JSON.stringify(data));
+    console.log('Incoming data ' + JSON.stringify(data));
     try {
       // timeTaken, questions, watchInfo
       sqlManager = require('./sqlManager.js');
@@ -105,6 +105,19 @@ io.on('connection', function (socket) {
     var res = sqlManager.readMedicationData(name)
     console.log("Medication response " + JSON.stringify(res))
     io.emit("responseMed", res)
+  });
+});
+
+// Send medication details back
+io.on('connection', function (socket) {
+  socket.on('queryHistory', function (name) {
+    console.log('Incoming medication for user ' + name);
+    // timeTaken, questions, watchInfo
+    sqlManager = require('./sqlManager.js');
+    sqlManager = new sqlManager("timeTaken")
+    var res = sqlManager.readMedicationDataTimeTaken(name)
+    console.log("Medication response " + JSON.stringify(res))
+    io.emit("responseHistory", res)
   });
 });
 

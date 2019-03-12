@@ -71,6 +71,17 @@ class sqlManager {
 
     }
 
+    readMedicationDataTimeTaken(data ){
+        console.log("Reading medication data for user " + data)
+        const stmt = this.db.prepare('SELECT * FROM timeTaken WHERE User=? ;');
+        const result = stmt.all(data);
+        if (result.length >= 1) {
+            return result;
+        }else {
+            return []
+        }
+    }
+
 
     write(data) {
 
