@@ -100,14 +100,20 @@ io.on('connection', function (socket) {
 // Send medication details back
 
 io.on('connection', function (socket) {
+  // socket.on('correct_slot', function (msg)){
+  //   // correct = 1
+  //   // wrong = 2 
+  // });
   socket.on('slot_lid', function (msg) {
     // TODO: When thy open wrong box
     // do on PI, when they open a slot without LED
     console.log('slot_lid ' + msg)
   });
   socket.on('pill_presence', function (msg) {
+    
+    msg= String(msg).replace( /,/g, "" );
     //repeater
-    io.emit('pill_presence', msg)
+    io.emit('pill_presence', {emptyState: msg})
     // console.log("repeated")
     if (msg == '1111') { start = true }
     else if (msg == '0000') {
