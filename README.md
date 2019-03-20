@@ -9,23 +9,24 @@
 * If any errors (usually on Windows) run `npm install --vs2015 -g windows-build-tools`
 * Run `npm start` to start the server 
 * The server should be started at `localhost:65080`
-* local host is your current ip address
-* be sure to use HTTP instead of HTTPS
+* Local host is your current ip address
+* Be sure to use HTTP instead of HTTPS
 
 Our cloud server implementation is identicial, except that it is running on a Google Cloud VM instance
 * 35.246.29.217:65080/ (most likely not running now)
 
-# Pill
-* get times for next pill 
-* when time reaches, emit indicator to pillbox as to which box to open next
-* once pill is taken record time taken
+
 
 # Responsibilities of the server 
-* save relevant data to SQL database (resources/storage.db)
-* repond to query from app/raspberry PI to database (e.g. medication details)
+* Save relevant data to SQL database (resources/storage.db)
+* Respond to query from app/raspberry PI to database (e.g. medication details)
 * Process the pillbox state machine to determine which pill to open next
 
 
+# Pill
+* Get times for next pill 
+* When time reaches, emit indicator to pillbox as to which box to open next
+* Once pill is taken record time taken
 
 # Example object
 
