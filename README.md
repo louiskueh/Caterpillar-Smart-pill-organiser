@@ -1,29 +1,37 @@
-# MobileHealthCare-Server
-Chat example hosted on gcloud server
-* socket io needs to be ^1.7.4
-35.246.29.217:65080/
+
+# About
+* Utilises Socket IO with websockets (NodeJS + Javascript)
+* Can be hosted locally or on the cloud
+* Uses SQLITE3 to store data 
+* npm for dependencies 
+# To Start
+* Run `npm install in the root folder`
+* If any errors (usually on Windows) run `npm install --vs2015 -g windows-build-tools`
+* Run `npm start` to start the server 
+* The server should be started at `localhost:65080`
+* local host is your current ip address
+* be sure to use HTTP instead of HTTPS
+
+Our cloud server implementation is identicial, except that it is running on a Google Cloud VM instance
+* 35.246.29.217:65080/ (most likely not running now)
+
 # Pill
 * get times for next pill 
 * when time reaches, emit indicator to pillbox as to which box to open next
 * once pill is taken record time taken
 
-# Pi interface
+# Responsibilities of the server 
+* save relevant data to SQL database (resources/storage.db)
+* repond to query from app/raspberry PI to database (e.g. medication details)
+* Process the pillbox state machine to determine which pill to open next
 
-* Recieve from PI - [0,1,1,1,1,1,1] - 6 values in a list
-e.g. 
-slot_lid 000000
-pill_presence 100000
 
-* Send to PI - digit representing which box to open
-e.g. 1 or 2 or 3
-* use `sudo npm start`
 
-# Test object
+# Example object
 
-* display csv command line 
-````
-column -s, -t < resources/questions.csv | less -#2 -N -S
-```
+* Saving user details to the SQL database
+* Send this JSOn object over SocketIO to the server
+
 ```js
 {
   type: "userDetails",
@@ -34,17 +42,3 @@ column -s, -t < resources/questions.csv | less -#2 -N -S
 }
 ```
 
-# Installation issues
-I was trying to install better-sqlite3 but kept getting errors about not finding VCBuild and MSBuild.
-
-I initally tried npm install -g node-gyp by itself but then got different errors.
-
-I then tried to use npm install -g windows-build-tools which installed Visual Studio 2017 and did NOT include the v140 toolset and was getting and error about this.
-
-But Visual Studio 2015 does includes the v140 toolset...
-You can force windows-build-tools to install VS2015 instead of VS2017 with this:
-npm install --vs2015 -g windows-build-tools
-
-better-sqlite3 installed fine after this.
-
-https://github.com/nodejs/node-gyp/issues/1486
