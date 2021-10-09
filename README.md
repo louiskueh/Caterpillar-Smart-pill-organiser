@@ -2,7 +2,9 @@
 
 ![caterpiller](https://user-images.githubusercontent.com/2521843/136666912-b54d89d2-31ba-4d21-b7b7-3145bbacd0d6.PNG)
 
-[Video demo here](https://www.youtube.com/watch?v=Fv4SDEJEMSU)
+[Video demo here (or click below image)](https://www.youtube.com/watch?v=Fv4SDEJEMSU)
+
+[![Alternate Text](https://user-images.githubusercontent.com/2521843/136666958-cae3c5e6-26c8-4876-928f-d6849ac6e0ca.PNG)](https://www.youtube.com/watch?v=Fv4SDEJEMSU)
 
 # About
 * Utilises Socket IO with websockets (NodeJS + Javascript)
