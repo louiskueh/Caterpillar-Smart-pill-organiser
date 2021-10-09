@@ -1,4 +1,16 @@
-# Caterpillar Smart Pill Organiser
+# Caterpillar Smart Pill Organiser - [Report](https://github.com/louiskueh/Caterpillar-Smart-pill-organiser/blob/master/MHML_Final_Report.pdf)
+Medication errors and poor medication adherence lead to
+higher risks to the patient as well as increased cost to the
+health care sector.
+
+Various solutions such as smart pillboxes
+have been developed to combat this problem. However, current smart pillboxes only use simple techniques such as fixed
+timed alarms and do not take into account the user habits. 
+
+A more flexible solution is proposed by utilising machine learning and a customised pillbox to introduce adaptive reminders
+to the patient’s schedule
+
+
 
 ![caterpiller](https://user-images.githubusercontent.com/2521843/136666912-b54d89d2-31ba-4d21-b7b7-3145bbacd0d6.PNG)
 
